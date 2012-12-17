@@ -22,6 +22,13 @@ class GeoIp extends Frontend
 {
 
 	/**
+     * Store the country for multiple requests
+     * @var string
+     */
+    public static $strCountry;
+
+
+	/**
 	 * Replace Contao inserttags about the current domain
 	 * @param string
 	 * @return string|false
@@ -85,6 +92,8 @@ class GeoIp extends Frontend
 	 */
 	private function findCountry()
 	{
+	    if (self::$strCountry === null) {
+
 		$ip = $this->Environment->ip;
 
 		// transform ip to decimal representation
@@ -93,21 +102,27 @@ class GeoIp extends Frontend
 		if ($ip_dec === false || $ip_dec < 1)
 		{
 			$this->log('IP detection did not work. Input was: "'. $ip .'"', 'GeoIp detectRootPage()', TL_INFO);
+    			self::$strCountry = false;
 			return false;
 		}
 
 		// lookup country in geoip table
 		$objCountry = $this->Database->prepare('SELECT iso_country_code FROM tl_geoipcountrywhois WHERE ? BETWEEN ip_from_dec AND ip_to_dec')
+    		                             ->limit(1)
 									 ->execute($ip_dec);
 
 		if (!$objCountry->numRows)
 		{
 			$this->log('No matching range in GeoIp table found. Input was: "'. $ip .'"', 'GeoIp detectRootPage()', TL_INFO);
+    			self::$strCountry = false;
 			return false;
 		}
 
 		// otherwise we found our country - great!
-		return $objCountry->iso_country_code;
+    		self::$strCountry = $objCountry->iso_country_code;
+        }
+
+        return self::$strCountry;
 	}
 }
 
