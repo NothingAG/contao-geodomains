@@ -31,4 +31,5 @@ $GLOBALS['FE_MOD']['miscellaneous']['geo_list'] = 'ModuleGeoList';
 if (TL_MODE == 'FE') {
     $GLOBALS['TL_HOOKS']['getRootPageFromUrl']['geoip'] = array('GeoIp', 'detectRootPage');
     $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('GeoIp', 'replaceTags');
+    $GLOBALS['TL_HOOKS']['parseTemplate'][] = array('GeoIp', 'hideNavigationItems');
 }

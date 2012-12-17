@@ -24,7 +24,17 @@
  * Config
  */
 $GLOBALS['TL_DCA']['tl_page']['config']['ctable'][] = 'tl_countryresp';
+
+/**
+ * Palettes
+ */
+$GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][] = 'geo_protected';
 $GLOBALS['TL_DCA']['tl_page']['palettes']['root'] = str_replace('{sitemap_legend:hide}', '{geoip_legend},geo_region_name,geo_country_resp,geo_fallback;{sitemap_legend:hide}', $GLOBALS['TL_DCA']['tl_page']['palettes']['root']);
+$GLOBALS['TL_DCA']['tl_page']['palettes']['regular'] = str_replace('protected', 'protected,geo_protected', $GLOBALS['TL_DCA']['tl_page']['palettes']['regular']);
+$GLOBALS['TL_DCA']['tl_page']['palettes']['redirect'] = str_replace('protected', 'protected,geo_protected', $GLOBALS['TL_DCA']['tl_page']['palettes']['redirect']);
+$GLOBALS['TL_DCA']['tl_page']['palettes']['forward'] = str_replace('protected', 'protected,geo_protected', $GLOBALS['TL_DCA']['tl_page']['palettes']['forward']);
+$GLOBALS['TL_DCA']['tl_page']['subpalettes']['geo_protected'] = 'geo_country_resp';
+
 
 /**
  * Fields
@@ -45,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['geo_country_resp'] = array
 	'exclude'		=> true,
 	'inputType'		=> 'select',
 	'options'		=> $this->getCountries(),
-	'eval'			=> array('multiple'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+	'eval'			=> array('multiple'=>true, 'chosen'=>true),
 	'load_callback'	=> array
 	(
 		array('tl_page_geoip', 'loadCountries')
@@ -62,6 +72,14 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['geo_fallback'] = array
 	'exclude'		=> true,
 	'inputType'		=> 'checkbox',
 	'eval'			=> array('tl_class'=>'w50 m12', 'fallback'=>true)
+);
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['geo_protected'] = array
+(
+	'label'			=> &$GLOBALS['TL_LANG']['tl_page']['geo_protected'],
+	'exclude'		=> true,
+	'inputType'		=> 'checkbox',
+	'eval'			=> array('submitOnChange'=>true, 'tl_class'=>'clr'),
 );
 
 

@@ -46,4 +46,5 @@ CREATE TABLE `tl_page` (
   `geo_country_resp` blob NULL,
   `geo_region_name` varchar(255) NOT NULL default '',
   `geo_fallback` char(1) NOT NULL default '',
+  `geo_protected` char(1) NOT NULL default '',
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
