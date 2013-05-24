@@ -76,7 +76,7 @@ class GeoIp extends Frontend
 			// otherwise there's a country available
 			$objRootPage = $this->Database->prepare("SELECT p.* FROM tl_countryresp c LEFT JOIN tl_page p ON p.id=c.pid WHERE p.type='root' AND c.iso_country_code=?")
 			                              ->limit(1)
-			                              ->execute(strtolower($country));
+			                              ->execute(strtoupper($country));
 		}
 
 		// if no page is responsible for this country we stay on the fallback
@@ -151,7 +151,7 @@ class GeoIp extends Frontend
     		}
 
     		// otherwise we found our country - great!
-    		self::$strCountry = $objCountry->iso_country_code;
+    		self::$strCountry = strtolower($objCountry->iso_country_code);
         }
 
         return self::$strCountry;
@@ -168,7 +168,7 @@ class GeoIp extends Frontend
     	$objCountries = $this->Database->prepare("SELECT c.iso_country_code FROM tl_countryresp c LEFT JOIN tl_page p ON p.id=c.pid WHERE p.id=?")
     	                               ->execute($intPage);
 
-        return $objCountries->fetchEach('iso_country_code');
+        return array_map('strtolower', $objCountries->fetchEach('iso_country_code'));
 	}
 }
 
