@@ -122,7 +122,7 @@ class GeoIp extends Frontend
 	 * Find the matching country
 	 * @return string|false ISO country code or false if not found
 	 */
-	private function findCountry()
+	public function findCountry()
 	{
 	    if (self::$strCountry === null) {
 
