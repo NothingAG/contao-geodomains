@@ -1,4 +1,4 @@
-# CONTAO EXTENSION: GEODOMAINS
+# CONTAO EXTENSION: GEODOMAIN
 (Previously GEOIP)
 
 Redirects a visitor according to its IP address to a specific root page. All settings are done in the page settings. The extension provides a frontend module to manually switch between the root-pages/ regions.
