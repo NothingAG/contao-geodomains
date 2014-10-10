@@ -2,21 +2,17 @@
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2012 Leo Feyer
  *
- * Formerly known as TYPOlight Open Source CMS.
+ * Copyright (c) 2005-2014 Leo Feyer
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * @link    https://contao.org
  *
  *
  * PHP version 5
- * @copyright  Nothing Interactive 2012 <https://www.nothing.ch/>
+ * @copyright  Nothing Interactive 2014
  * @author     Yanick Witschi <yanick.witschi@terminal42.ch>
  * @author     Andreas Schempp <andreas.schempp@terminal42.ch>
- * @author     Stefan Pfister <red@nothing.ch>
- * @license    http://opensource.org/licenses/lgpl-3.0.html
+ * @license    [GNU Lesser General Public License (LGPL)](http://www.gnu.org/licenses/lgpl.html)
  */
 
 
@@ -24,88 +20,160 @@
  * Config
  */
 $GLOBALS['TL_DCA']['tl_page']['config']['ctable'][] = 'tl_countryresp';
-$GLOBALS['TL_DCA']['tl_page']['palettes']['root'] = str_replace('{sitemap_legend:hide}', '{geoip_legend},geo_region_name,geo_country_resp,geo_fallback;{sitemap_legend:hide}', $GLOBALS['TL_DCA']['tl_page']['palettes']['root']);
+$GLOBALS['TL_DCA']['tl_page']['config']['onload_callback'][] = array('tl_page_geodomains', 'onLoad');
+
 
 /**
  * Fields
  */
-$GLOBALS['TL_DCA']['tl_page']['fields']['fallback']['eval']['submitOnChange'] = true;
+$GLOBALS['TL_DCA']['tl_page']['fields']['fallback']['eval']['submitOnChange'] = TRUE;
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['geo_region_name'] = array
+$GLOBALS['TL_DCA']['tl_page']['fields']['gd_skip'] = array
 (
-	'label'			=> &$GLOBALS['TL_LANG']['tl_page']['geo_region_name'],
-	'exclude'		=> true,
-	'inputType'		=> 'text',
-	'eval'			=> array('tl_class'=>'w50'),
+    'label'			=> &$GLOBALS['TL_LANG']['tl_page']['gd_skip'],
+    'exclude'		=> TRUE,
+    'inputType'		=> 'checkbox',
+    'eval'			=> array('tl_class'=>'clr'),
+    'sql'           => "char(1) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['geo_country_resp'] = array
+$GLOBALS['TL_DCA']['tl_page']['fields']['gd_region_name'] = array
 (
-	'label'			=> &$GLOBALS['TL_LANG']['tl_page']['geo_country_resp'],
-	'exclude'		=> true,
-	'inputType'		=> 'select',
-	'options'		=> $this->getCountries(),
-	'eval'			=> array('multiple'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'load_callback'	=> array
-	(
-		array('tl_page_geoip', 'loadCountries')
-	),
-	'save_callback'	=> array
-	(
-		array('tl_page_geoip', 'saveCountries')
-	)
+    'label'			=> &$GLOBALS['TL_LANG']['tl_page']['gd_region_name'],
+    'exclude'		=> TRUE,
+    'inputType'		=> 'text',
+    'eval'			=> array('tl_class'=>'w50'),
+    'sql'           => "varchar(255) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['geo_fallback'] = array
+$GLOBALS['TL_DCA']['tl_page']['fields']['gd_city_name'] = array
 (
-	'label'			=> &$GLOBALS['TL_LANG']['tl_page']['geo_fallback'],
-	'exclude'		=> true,
-	'inputType'		=> 'checkbox',
-	'eval'			=> array('tl_class'=>'w50 m12', 'fallback'=>true)
+    'label'			=> &$GLOBALS['TL_LANG']['tl_page']['gd_city_name'],
+    'exclude'		=> TRUE,
+    'inputType'		=> 'text',
+    'eval'			=> array('tl_class'=>'w50'),
+    'sql'           => "varchar(255) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['gd_pic'] = array
+(
+    'label'			=> &$GLOBALS['TL_LANG']['tl_page']['gd_pic'],
+    'exclude'		=> TRUE,
+    'inputType'		=> 'fileTree',
+    'eval'			=> array('fieldType'=>'radio', 'files'=>TRUE, 'filesOnly'=>TRUE, 'extensions'=>'jpeg,jpg,png,gif', 'tl_class'=>'clr'),
+    'sql'           => "binary(16) NULL"
+);
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['gd_country_resp'] = array
+(
+    'label'			=> &$GLOBALS['TL_LANG']['tl_page']['gd_country_resp'],
+    'exclude'		=> TRUE,
+    'inputType'		=> 'select',
+    'options'		=> $this->getCountries(),
+    'eval'			=> array('multiple'=>TRUE, 'chosen'=>TRUE, 'tl_class'=>'w50'),
+    'sql'           => 'blob NULL',
+    'load_callback'	=> array
+    (
+        array('tl_page_geodomains', 'loadCountries')
+    ),
+    'save_callback'	=> array
+    (
+        array('tl_page_geodomains', 'saveCountries')
+    )
+);
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['gd_fallback'] = array
+(
+    'label'			=> &$GLOBALS['TL_LANG']['tl_page']['gd_fallback'],
+    'exclude'		=> TRUE,
+    'inputType'		=> 'checkbox',
+    'eval'			=> array('tl_class'=>'w50 m12', 'fallback'=>TRUE),
+    'sql'           => "char(1) NOT NULL default ''"
+);
+
+// TODO DEPRECATED
+$GLOBALS['TL_DCA']['tl_page']['fields']['gd_hasMobile'] = array
+(
+    'label'			=> &$GLOBALS['TL_LANG']['tl_page']['gd_hasMobile'],
+    'exclude'		=> TRUE,
+    'inputType'		=> 'checkbox',
+    'eval'			=> array('tl_class'=>'clr', 'submitOnChange'=>TRUE),
+    'sql'           => "char(1) NOT NULL default ''"
+);
+
+// TODO DEPRECATED
+$GLOBALS['TL_DCA']['tl_page']['fields']['gd_mobile'] = array
+(
+    'label'			=> &$GLOBALS['TL_LANG']['tl_page']['gd_mobile'],
+    'exclude'		=> TRUE,
+    'inputType'		=> 'pageTree',
+    'eval'			=> array('fieldType'=>'radio', 'tl_class'=>'clr'),
+    'sql'           => "int(10) unsigned NOT NULL default '0'"
 );
 
 
-
-class tl_page_geoip extends Backend
+/**
+ * Class tl_page_geodomains
+ */
+class tl_page_geodomains extends Backend
 {
-	/**
-	 * Load countries from association table
-	 * @param mixed
-	 * @param DataContainer
-	 */
-	public function loadCountries($varValue, DataContainer $dc)
-	{
-		$arrData = array();
-		$objData = $this->Database->prepare('SELECT iso_country_code FROM tl_countryresp WHERE pid=?')->execute($dc->id);
 
-		if ($objData->numRows)
-		{
-			$arrData = $objData->fetchEach('iso_country_code');
-		}
+    /**
+     * onPage load check for fallback.
+     * @param DataContainer $dc Data container
+     */
+    public function onLoad(DataContainer $dc)
+    {
+        $objEntry = $this->Database->prepare('SELECT fallback FROM tl_page WHERE id=?')->execute($dc->id);
 
-		return serialize($arrData);
-	}
+        if ($objEntry->fallback)
+        {
+            $GLOBALS['TL_DCA']['tl_page']['palettes']['root'] = str_replace('{sitemap_legend:hide}', '{geodomains_legend},gd_skip,gd_region_name,gd_city_name,gd_pic,gd_country_resp,gd_fallback,gd_hasMobile;{sitemap_legend:hide}', $GLOBALS['TL_DCA']['tl_page']['palettes']['root']);
+            $GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][] = 'gd_hasMobile';
+            $GLOBALS['TL_DCA']['tl_page']['subpalettes']['gd_hasMobile'] = 'gd_mobile';
+        }
+    }
 
 
-	/**
-	 * Save countries to association table
-	 * @param mixed
-	 * @param DataContainer
-	 */
-	public function saveCountries($varValue, DataContainer $dc)
-	{
-		$arrData = deserialize($varValue, true);
+    /**
+     * Load countries from association table
+     * @param mixed
+     * @param DataContainer
+     * @return string serialized data
+     */
+    public function loadCountries($varValue, DataContainer $dc)
+    {
+        $arrData = array();
+        $objData = $this->Database->prepare('SELECT iso_country_code FROM tl_countryresp WHERE pid=?')->execute($dc->id);
 
-		$this->Database->prepare('DELETE FROM tl_countryresp WHERE pid=?')->execute($dc->id);
+        if ($objData->numRows)
+        {
+            $arrData = $objData->fetchEach('iso_country_code');
+        }
 
-		foreach ($arrData as $countryCode)
-		{
-			$arrSet = array();
-			$arrSet['iso_country_code']	= $countryCode;
-			$arrSet['pid']				= $dc->id;
-			$this->Database->prepare('INSERT INTO tl_countryresp %s')->set($arrSet)->execute();
-		}
+        return serialize($arrData);
+    }
 
-		return $varValue;
-	}
+
+    /**
+     * Save countries to association table
+     * @param mixed
+     * @param DataContainer
+     */
+    public function saveCountries($varValue, DataContainer $dc)
+    {
+        $arrData = deserialize($varValue, TRUE);
+
+        $this->Database->prepare('DELETE FROM tl_countryresp WHERE pid=?')->execute($dc->id);
+
+        foreach ($arrData as $countryCode)
+        {
+            $arrSet = array();
+            $arrSet['iso_country_code']	= $countryCode;
+            $arrSet['pid']				= $dc->id;
+            $this->Database->prepare('INSERT INTO tl_countryresp %s')->set($arrSet)->execute();
+        }
+
+        return $varValue;
+    }
 }

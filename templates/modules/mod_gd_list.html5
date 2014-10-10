@@ -1,0 +1,23 @@
+<!-- indexer::stop -->
+<nav class="<?php echo $this->class; ?> block"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
+<?php if ($this->headline): ?>
+
+<<?php echo $this->hl; ?>><?php echo $this->headline; ?></<?php echo $this->hl; ?>>
+<?php endif; ?>
+
+<ul>
+<?php foreach ($this->items as $item): ?>
+  <?php if($item['display'] == 1):?>
+    <li<?php if ($item['class']): ?> class="<?php echo $item['class']; ?>"<?php endif; ?>>
+        <a href="<?php echo $item['href']; ?>" title="<?php echo $item['title']; ?>"<?php if ($item['class']): ?> class="<?php echo $item['class']; ?>"<?php endif; ?><?php if ($item['accesskey'] != ''): ?> accesskey="<?php echo $item['accesskey']; ?>"<?php endif; ?><?php if ($item['tabindex']): ?> tabindex="<?php echo $item['tabindex']; ?>"<?php endif; ?><?php if ($item['nofollow']): ?> rel="nofollow"<?php endif; ?><?php echo $item['target']; ?>>
+            <img src="<?php echo $item['image_src']; ?>" width="<?php echo $item['image_w']; ?>" height="<?php echo $item['image_h']; ?>" alt="<?php echo $item['title']; ?>">
+            <span class="region"><?php echo $item['region']; ?></span>
+            <span class="city"><?php echo $item['city']; ?></span>
+        </a>
+    </li>
+  <?php endif; ?>
+<?php endforeach; ?>
+</ul>
+
+</nav>
+<!-- indexer::continue -->

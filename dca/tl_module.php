@@ -2,20 +2,16 @@
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2012 Leo Feyer
  *
- * Formerly known as TYPOlight Open Source CMS.
+ * Copyright (c) 2005-2014 Leo Feyer
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * @link    https://contao.org
  *
  *
  * PHP version 5
- * @copyright  Nothing Interactive 2012 <https://www.nothing.ch/>
+ * @copyright  Nothing Interactive 2014
  * @author     Yanick Witschi <yanick.witschi@terminal42.ch>
- * @author     Stefan Pfister <red@nothing.ch>
- * @license    http://opensource.org/licenses/lgpl-3.0.html
+ * @license    [GNU Lesser General Public License (LGPL)](http://www.gnu.org/licenses/lgpl.html)
  */
 
 
@@ -23,4 +19,4 @@
 /**
  * Add palette to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['geo_list']    = '{title_legend},name,headline,type;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['gd_list']    = '{title_legend},name,headline,type;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
