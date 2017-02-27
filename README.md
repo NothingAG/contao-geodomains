@@ -1,3 +1,6 @@
+# [UNMAINTAINED]
+This project is not maintained anymore.
+
 # CONTAO EXTENSION: GEODOMAINS
 (Previously GEOIP)
 
